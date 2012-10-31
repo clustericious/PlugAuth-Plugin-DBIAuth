@@ -15,7 +15,7 @@ with 'PlugAuth::Role::Auth';
 
 =head1 SYNOPSIS
 
-PlugAuth.conf:
+In your PlugAuth.conf file:
 
  ---
  plugins:
