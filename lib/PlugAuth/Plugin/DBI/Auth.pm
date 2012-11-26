@@ -35,6 +35,26 @@ This plugin provides an authentication mechanism for PlugAuth using any
 database supported by DBI as a backend.  It is configured as above, with
 two hashes, db and sql.
 
+=head2 encryption
+
+Specifies the encryption method to use.  If provided, must be one of:
+
+=over 4
+
+=item * unix
+
+Traditional UNIX crypt()
+
+=item * unix_md5
+
+UNIX MD5
+
+=item * apache_md5 [ default ]
+
+Apache MD5
+
+=back
+
 =head2 db
 
 The db hash provides the required parameters for the plugin needed to
@@ -83,11 +103,13 @@ sub init
   $self->{dbh}->do($sql{init})
     if defined $sql{init};
   
-  foreach my $name (qw( check_credentials all_users ))
+  foreach my $name (qw( check_credentials all_users create_user change_password delete_user ))
   {
     $self->{$name} = $self->{dbh}->prepare($sql{$name})
       if defined $sql{$name};
   }
+  
+  $self->{encryption} = $self->plugin_config->encryption(default => 'apache_md5');
 }
 
 =head3 check_credentials
@@ -151,18 +173,101 @@ sub all_users
   @list;
 }
 
-# sub create_user {
-#   my($self, $user, $pass) = @_;
-# }
-#
-# sub change_password {
-#   my($self, $user, $pass) = @_;
-# }
-#
-# sub delete_user {
-#   my($self, $user) = @_;
-# } 
+=head3 create_user
+
+The SQL statement used to create a new user.  Example:
+
+ INSERT INTO users (username, password) VALUES (?,?)
+
+=cut
+
+sub create_user {
+  my($self, $user, $pass) = @_;
+  
+  if(defined $self->{create_user})
+  {
+    $self->{create_user}->execute($user, $self->created_encrypted_password($pass));
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+=head3 change_password
+
+The SQL statement used to change the password of an existing user.  Example:
+
+ UPDATE users SET password = ? WHERE username = ?
+
+=cut
+
+sub change_password {
+  my($self, $user, $pass) = @_;
+  
+  if(defined $self->{change_password})
+  {
+    $self->{change_password}->execute($self->created_encrypted_password($pass), $user);
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+=head3 delete_user
+
+The SQL statement used to delete an existing user.  Example:
+
+ DELETE FROM users WHERE username = ?
+
+=cut
+
+sub delete_user {
+  my($self, $user) = @_;
+  
+  if(defined $self->{delete_user})
+  {
+    $self->{delete_user}->execute($user);
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
+} 
 
 sub dbh { shift->{dbh} }
 
+sub created_encrypted_password
+{
+    my($self, $plain) = @_;
+    my $salt = join '', ('.', '/', 0..9, 'A'..'Z', 'a'..'z')[rand 64, rand 64];
+    if($self->{encryption} eq 'apache_md5')
+    {
+      return apache_md5_crypt($plain, $salt);
+    }
+    elsif($self->{encryption} eq 'unix_md5')
+    {
+      return unix_md5_crypt($plain, $salt);
+    }
+    elsif($self->{encryption} eq 'unix')
+    {
+      return crypt($plain, $salt);
+    }
+    else
+    {
+      die "unknown encryption " . $self->{encryption};
+    }
+}
+
 1;
+
+=head1 SEE ALSO
+
+L<DBI>,
+L<PlugAuth>
+
+=cut
