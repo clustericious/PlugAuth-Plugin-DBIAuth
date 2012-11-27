@@ -21,7 +21,7 @@ mkdir(File::Spec->catdir($home, 'etc'));
 my $dbfile = File::Spec->catfile($home, 'auth.sqlite');
 YAML::DumpFile(File::Spec->catfile($home, 'etc', 'PlugAuth.conf'), {
   plugins => [ {
-    'PlugAuth::Plugin::DBI::Auth' => {
+    'PlugAuth::Plugin::DBIAuth' => {
       db => {
         dsn  => "dbi:SQLite:dbname=$dbfile",
         user => '',
@@ -37,7 +37,7 @@ YAML::DumpFile(File::Spec->catfile($home, 'etc', 'PlugAuth.conf'), {
 
 my $app = PlugAuth->new;
 isa_ok $app, 'PlugAuth';
-isa_ok $app->auth, 'PlugAuth::Plugin::DBI::Auth';
+isa_ok $app->auth, 'PlugAuth::Plugin::DBIAuth';
 
 $app->auth->dbh->do('INSERT INTO users (username, password) VALUES (?,?)', undef, 'optimus','ZL3D6w7QAFAK.'); # optimus:matrix
 

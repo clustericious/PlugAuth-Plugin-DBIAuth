@@ -12,7 +12,7 @@ unless(eval qq{ require DBD::SQLite; 1 })
 my $home = File::HomeDir->my_home;
 my $dbfile = File::Spec->catfile($home, 'auth.sqlite');
 
-run_tests 'PlugAuth::Plugin::DBI::Auth', {}, {
+run_tests 'PlugAuth::Plugin::DBIAuth', {}, {
       db => {
         dsn  => "dbi:SQLite:dbname=$dbfile",
         user => '',

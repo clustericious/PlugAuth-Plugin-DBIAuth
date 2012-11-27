@@ -1,4 +1,4 @@
-package PlugAuth::Plugin::DBI::Auth;
+package PlugAuth::Plugin::DBIAuth;
 
 use strict;
 use warnings;
@@ -19,7 +19,7 @@ In your PlugAuth.conf file:
 
  ---
  plugins:
-   - PlugAuth::Plugin::DBI::Auth:
+   - PlugAuth::Plugin::DBIAuth:
        db:
          dsn: 'dbi:SQLite:dbname=/path/to/dbfile.sqlite'
          user: ''

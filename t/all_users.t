@@ -22,7 +22,7 @@ mkdir(File::Spec->catdir($home, 'etc'));
 my $dbfile = File::Spec->catfile($home, 'auth.sqlite');
 YAML::DumpFile(File::Spec->catfile($home, 'etc', 'PlugAuth.conf'), {
   plugins => [ {
-    'PlugAuth::Plugin::DBI::Auth' => {
+    'PlugAuth::Plugin::DBIAuth' => {
       db => {
         dsn  => "dbi:SQLite:dbname=$dbfile",
         user => '',
@@ -38,7 +38,7 @@ YAML::DumpFile(File::Spec->catfile($home, 'etc', 'PlugAuth.conf'), {
 
 my $app = PlugAuth->new;
 isa_ok $app, 'PlugAuth';
-isa_ok $app->auth, 'PlugAuth::Plugin::DBI::Auth';
+isa_ok $app->auth, 'PlugAuth::Plugin::DBIAuth';
 
 eq_or_diff [ sort $app->auth->all_users ], [], "all_users = ()";
 
