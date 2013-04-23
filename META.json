@@ -1,0 +1,49 @@
+{
+   "abstract" : "DBI Authentication back end for PlugAuth",
+   "author" : [
+      "Graham Ollis <gollis@sesda3.com>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 4.300021, CPAN::Meta::Converter version 2.120921",
+   "license" : [
+      "restricted"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "PlugAuth-Plugin-DBIAuth",
+   "prereqs" : {
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Crypt::PasswdMD5" : "0",
+            "DBI" : "0",
+            "Log::Log4perl" : "0",
+            "PlugAuth" : "0",
+            "PlugAuth::Role::Auth" : "0",
+            "PlugAuth::Role::Plugin" : "0",
+            "Role::Tiny::With" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "File::HomeDir" : "0",
+            "File::HomeDir::Test" : "0",
+            "File::Spec" : "0",
+            "PlugAuth" : "0",
+            "Test::Differences" : "0",
+            "Test::More" : "0",
+            "Test::PlugAuth::Plugin::Auth" : "0",
+            "YAML" : "0"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "version" : "0.01"
+}
+
