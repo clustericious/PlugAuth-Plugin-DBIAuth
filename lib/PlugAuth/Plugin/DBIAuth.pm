@@ -37,7 +37,12 @@ two hashes, db and sql.
 
 =head2 encryption
 
-Specifies the encryption method to use.  If provided, must be one of:
+Specifies the encryption method to use.  This is only used when creating
+new users, or changing their passwords.  Existing passwords will remain
+in their existing formats and will be decrypted automatically in the 
+correct format.
+
+If provided, must be one of:
 
 =over 4
 
