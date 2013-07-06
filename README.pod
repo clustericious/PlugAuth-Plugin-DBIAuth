@@ -1,0 +1,144 @@
+=head1 NAME
+
+PlugAuth::Plugin::DBIAuth - DBI Authentication back end for PlugAuth
+
+=head1 VERSION
+
+version 0.02
+
+=head1 SYNOPSIS
+
+In your PlugAuth.conf file:
+
+ ---
+ plugins:
+   - PlugAuth::Plugin::DBIAuth:
+       db:
+         dsn: 'dbi:SQLite:dbname=/path/to/dbfile.sqlite'
+         user: ''
+         pass: ''
+       sql:
+         init: 'CREATE TABLE IF NOT EXISTS users (username VARCHAR UNIQUE, password VARCHAR)'
+         check_credentials: 'SELECT password FROM users WHERE username = ?'
+         all_users: 'SELECT username FROM users'
+
+=head1 DESCRIPTION
+
+This plugin provides an authentication mechanism for PlugAuth using any
+database supported by DBI as a backend.  It is configured as above, with
+two hashes, db and sql.
+
+=head2 encryption
+
+Specifies the encryption method to use.  This is only used when creating
+new users, or changing their passwords.  Existing passwords will remain
+in their existing formats and will be decrypted automatically in the 
+correct format.
+
+If provided, must be one of:
+
+=over 4
+
+=item * unix
+
+Traditional UNIX crypt()
+
+=item * unix_md5
+
+UNIX MD5
+
+=item * apache_md5 [ default ]
+
+Apache MD5
+
+=back
+
+=head2 db
+
+The db hash provides the required parameters for the plugin needed to
+connect to the database.
+
+=head3 dsn
+
+The DNS passed into DBI.  See the documentation for your database driver
+for the exact format (L<DBD::SQLite>, L<DBD::Pg>, L<DBD::mysql> ... ).
+
+=head3 user
+
+The database user.
+
+=head3 pass
+
+The database password.
+
+=head2 sql
+
+The sql hash provides SQL statements which are executed for each 
+operation.  They are all optional.  The examples shown here assumes
+a simple table with usernames and passwords:
+
+ CREATE TABLE IF NOT EXISTS users (
+   username VARCHAR UNIQUE,
+   password VARCHAR
+ );
+
+=head3 init
+
+Arbitrary SQL executed when the plugin is started.
+
+=head3 check_credentials
+
+The SQL statement used to fetch the encrypted password of a
+user.  The username is the first bind value when executed.
+Example:
+
+ SELECT password FROM users WHERE username = ?
+
+=head3 all_users
+
+The SQL statement used to fetch the list of users.  Example:
+
+ SELECT username FROM users
+
+=head3 create_user
+
+The SQL statement used to create a new user.  Example:
+
+ INSERT INTO users (username, password) VALUES (?,?)
+
+=head3 change_password
+
+The SQL statement used to change the password of an existing user.  Example:
+
+ UPDATE users SET password = ? WHERE username = ?
+
+=head3 delete_user
+
+The SQL statement used to delete an existing user.  Example:
+
+ DELETE FROM users WHERE username = ?
+
+=head3 dbh
+
+Returns the dbh handle used to query the database.
+
+=head3 created_encrypted_password
+
+Given a new plain text password, return the encrypted version.
+
+=head1 SEE ALSO
+
+L<DBI>,
+L<PlugAuth>
+
+=head1 AUTHOR
+
+Graham Ollis <gollis@sesda3.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2012 by NASA GSFC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+

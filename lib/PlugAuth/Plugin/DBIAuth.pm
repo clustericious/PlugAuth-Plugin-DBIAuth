@@ -244,7 +244,19 @@ sub delete_user {
   }
 } 
 
+=head3 dbh
+
+Returns the dbh handle used to query the database.
+
+=cut
+
 sub dbh { shift->{dbh} }
+
+=head3 created_encrypted_password
+
+Given a new plain text password, return the encrypted version.
+
+=cut
 
 sub created_encrypted_password
 {
