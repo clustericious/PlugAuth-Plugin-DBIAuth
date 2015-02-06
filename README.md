@@ -1,34 +1,30 @@
-=head1 NAME
+# PlugAuth::Plugin::DBIAuth
 
-PlugAuth::Plugin::DBIAuth - DBI Authentication back end for PlugAuth
+DBI Authentication back end for PlugAuth
 
-=head1 VERSION
-
-version 0.03
-
-=head1 SYNOPSIS
+# SYNOPSIS
 
 In your PlugAuth.conf file:
 
- ---
- plugins:
-   - PlugAuth::Plugin::DBIAuth:
-       db:
-         dsn: 'dbi:SQLite:dbname=/path/to/dbfile.sqlite'
-         user: ''
-         pass: ''
-       sql:
-         init: 'CREATE TABLE IF NOT EXISTS users (username VARCHAR UNIQUE, password VARCHAR)'
-         check_credentials: 'SELECT password FROM users WHERE username = ?'
-         all_users: 'SELECT username FROM users'
+    ---
+    plugins:
+      - PlugAuth::Plugin::DBIAuth:
+          db:
+            dsn: 'dbi:SQLite:dbname=/path/to/dbfile.sqlite'
+            user: ''
+            pass: ''
+          sql:
+            init: 'CREATE TABLE IF NOT EXISTS users (username VARCHAR UNIQUE, password VARCHAR)'
+            check_credentials: 'SELECT password FROM users WHERE username = ?'
+            all_users: 'SELECT username FROM users'
 
-=head1 DESCRIPTION
+# DESCRIPTION
 
 This plugin provides an authentication mechanism for PlugAuth using any
 database supported by DBI as a backend.  It is configured as above, with
 two hashes, db and sql.
 
-=head2 encryption
+## encryption
 
 Specifies the encryption method to use.  This is only used when creating
 new users, or changing their passwords.  Existing passwords will remain
@@ -37,108 +33,103 @@ correct format.
 
 If provided, must be one of:
 
-=over 4
+- unix
 
-=item * unix
+    Traditional UNIX crypt()
 
-Traditional UNIX crypt()
+- unix\_md5
 
-=item * unix_md5
+    UNIX MD5
 
-UNIX MD5
+- apache\_md5 \[ default \]
 
-=item * apache_md5 [ default ]
+    Apache MD5
 
-Apache MD5
-
-=back
-
-=head2 db
+## db
 
 The db hash provides the required parameters for the plugin needed to
 connect to the database.
 
-=head3 dsn
+### dsn
 
 The DNS passed into DBI.  See the documentation for your database driver
-for the exact format (L<DBD::SQLite>, L<DBD::Pg>, L<DBD::mysql> ... ).
+for the exact format ([DBD::SQLite](https://metacpan.org/pod/DBD::SQLite), [DBD::Pg](https://metacpan.org/pod/DBD::Pg), [DBD::mysql](https://metacpan.org/pod/DBD::mysql) ... ).
 
-=head3 user
+### user
 
 The database user.
 
-=head3 pass
+### pass
 
 The database password.
 
-=head2 sql
+## sql
 
 The sql hash provides SQL statements which are executed for each 
 operation.  They are all optional.  The examples shown here assumes
 a simple table with usernames and passwords:
 
- CREATE TABLE IF NOT EXISTS users (
-   username VARCHAR UNIQUE,
-   password VARCHAR
- );
+    CREATE TABLE IF NOT EXISTS users (
+      username VARCHAR UNIQUE,
+      password VARCHAR
+    );
 
-=head3 init
+### init
 
 Arbitrary SQL executed when the plugin is started.
 
-=head3 check_credentials
+### check\_credentials
 
 The SQL statement used to fetch the encrypted password of a
 user.  The username is the first bind value when executed.
 Example:
 
- SELECT password FROM users WHERE username = ?
+    SELECT password FROM users WHERE username = ?
 
-=head3 all_users
+### all\_users
 
 The SQL statement used to fetch the list of users.  Example:
 
- SELECT username FROM users
+    SELECT username FROM users
 
-=head3 create_user
+### create\_user
 
 The SQL statement used to create a new user.  Example:
 
- INSERT INTO users (username, password) VALUES (?,?)
+    INSERT INTO users (username, password) VALUES (?,?)
 
-=head3 change_password
+### change\_password
 
 The SQL statement used to change the password of an existing user.  Example:
 
- UPDATE users SET password = ? WHERE username = ?
+    UPDATE users SET password = ? WHERE username = ?
 
-=head3 delete_user
+### delete\_user
 
 The SQL statement used to delete an existing user.  Example:
 
- DELETE FROM users WHERE username = ?
+    DELETE FROM users WHERE username = ?
 
-=head3 dbh
+### dbh
 
 Returns the dbh handle used to query the database.
 
-=head3 created_encrypted_password
+### created\_encrypted\_password
 
 Given a new plain text password, return the encrypted version.
 
-=head1 SEE ALSO
+# SEE ALSO
 
-L<DBI>,
-L<PlugAuth>
+[DBI](https://metacpan.org/pod/DBI),
+[PlugAuth](https://metacpan.org/pod/PlugAuth)
 
-=head1 AUTHOR
+# AUTHOR
 
 Graham Ollis <gollis@sesda3.com>
 
-=head1 COPYRIGHT AND LICENSE
+# COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by NASA GSFC.
+This software is copyright (c) 2015 by Graham Ollis.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
-
