@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::Clustericious::Cluster;
+use Test::Clustericious::Cluster 0.25;
 use Test::More;
 
 plan skip_all => 'Test requires DBD::SQLite' unless eval q{ require DBD::SQLite; 1 };
