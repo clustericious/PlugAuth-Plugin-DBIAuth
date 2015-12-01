@@ -1,41 +1,15 @@
 use strict;
 use warnings;
-use File::HomeDir::Test;
-use File::HomeDir;
-use File::Spec;
+use Test::Clustericious::Cluster;
 use Test::More;
-use PlugAuth;
-use YAML ();
 
-if(eval qq{ require DBD::SQLite; 1 })
-{
-  plan tests => 9;
-}
-else
-{
-  plan skip_all => 'Test requires DBD::SQLite';
-}
+plan skip_all => 'Test requires DBD::SQLite' unless eval q{ require DBD::SQLite; 1 };
+plan tests => 9;
 
-my $home = File::HomeDir->my_home;
-mkdir(File::Spec->catdir($home, 'etc'));
-my $dbfile = File::Spec->catfile($home, 'auth.sqlite');
-YAML::DumpFile(File::Spec->catfile($home, 'etc', 'PlugAuth.conf'), {
-  plugins => [ {
-    'PlugAuth::Plugin::DBIAuth' => {
-      db => {
-        dsn  => "dbi:SQLite:dbname=$dbfile",
-        user => '',
-        pass => '',
-      },
-      sql => {
-        check_credentials => "SELECT password FROM users WHERE username = ?",
-        init              => "CREATE TABLE users ( username VARCHAR, password VARCHAR )",
-      },
-    }
-  } ],
-});
+my $cluster = Test::Clustericious::Cluster->new;
+$cluster->create_cluster_ok('PlugAuth');
+my $app = $cluster->apps->[0];
 
-my $app = PlugAuth->new;
 isa_ok $app, 'PlugAuth';
 isa_ok $app->auth, 'PlugAuth::Plugin::DBIAuth';
 
@@ -51,4 +25,19 @@ is $app->auth->check_credentials('rodimus',   'cybertron'), 1, "rodimus cybertro
 is $app->auth->check_credentials('rodimus',   'badpas'),    0, "rodimus badpas is bad";
 is $app->auth->check_credentials('galvatron', 'matrix'),    0, "galvatron matrix is bad";
 
-pass 'test count is divisible by 3';
+__DATA__
+
+@@ etc/PlugAuth.conf
+---
+url: <%= cluster->url %>
+plugins:
+  - PlugAuth::Plugin::DBIAuth:
+      db:
+        dsn: dbi:SQLite:dbname=<%= home %>/auth.sqlite
+        user: ''
+        pass: ''
+      sql:
+        check_credentials: SELECT password FROM users WHERE username = ?
+        init: CREATE TABLE users ( username VARCHAR, password VARCHAR )
+
+
