@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.05      2015-12-01 07:25:42 -0500
   - Silenced silly warnings due to crypt returning undef.
   - Moved repository to clustericious org on github
     (updated meta appropriately)
