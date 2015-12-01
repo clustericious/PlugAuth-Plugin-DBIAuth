@@ -125,7 +125,7 @@ Given a new plain text password, return the encrypted version.
 
 # AUTHOR
 
-Graham Ollis <gollis@sesda3.com>
+Graham Ollis &lt;gollis@sesda3.com>
 
 # COPYRIGHT AND LICENSE
 

@@ -2,6 +2,7 @@ package PlugAuth::Plugin::DBIAuth;
 
 use strict;
 use warnings;
+use 5.010;
 use DBI;
 use Log::Log4perl qw/:easy/;
 use Role::Tiny::With;
@@ -138,9 +139,9 @@ sub check_credentials
     $self->{check_credentials}->finish;
     if($encrypted)
     {
-      return 1 if crypt($pass, $encrypted) eq $encrypted;
+      my $tmp = crypt($pass, $encrypted);
+      return 1 if (defined $tmp) && ($tmp eq $encrypted);
       
-        $DB::single = 1;
       if($encrypted =~ /^\$(\w+)\$/)
       {
         return 1 if $1 eq 'apr1' && apache_md5_crypt( $pass, $encrypted ) eq $encrypted;

@@ -1,8 +1,10 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Silenced silly warnings due to crypt returning undef.
 
 0.04      2015-02-06 13:09:29 -0500
+  - Changed build (no external changes)
 
 0.03      2013-07-06 18:15:54 America/New_York
   - documentation
