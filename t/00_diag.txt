@@ -1,0 +1,16 @@
+Crypt::PasswdMD5
+DBI
+ExtUtils::MakeMaker
+File::HomeDir
+File::HomeDir::Test
+File::Spec
+Log::Log4perl
+PlugAuth
+PlugAuth::Role::Auth
+PlugAuth::Role::Plugin
+Role::Tiny::With
+Test::Differences
+Test::More
+Test::PlugAuth::Plugin::Auth
+YAML
+YAML::XS
