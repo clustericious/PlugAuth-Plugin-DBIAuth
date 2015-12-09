@@ -1,4 +1,4 @@
-# PlugAuth::Plugin::DBIAuth
+# PlugAuth::Plugin::DBIAuth [![Build Status](https://secure.travis-ci.org/clustericious/PlugAuth-Plugin-DBIAuth.png)](http://travis-ci.org/clustericious/PlugAuth-Plugin-DBIAuth)
 
 DBI Authentication back end for PlugAuth
 
