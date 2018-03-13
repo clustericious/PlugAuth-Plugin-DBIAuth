@@ -1,6 +1,6 @@
 # PlugAuth::Plugin::DBIAuth [![Build Status](https://secure.travis-ci.org/clustericious/PlugAuth-Plugin-DBIAuth.png)](http://travis-ci.org/clustericious/PlugAuth-Plugin-DBIAuth)
 
-DBI Authentication back end for PlugAuth
+(Deprecated) DBI Authentication back end for PlugAuth
 
 # SYNOPSIS
 
@@ -19,6 +19,9 @@ In your PlugAuth.conf file:
             all_users: 'SELECT username FROM users'
 
 # DESCRIPTION
+
+**NOTE**: This module has been deprecated, and may be removed on or after 31 December 2018.
+Please see [https://github.com/clustericious/Clustericious/issues/46](https://github.com/clustericious/Clustericious/issues/46).
 
 This plugin provides an authentication mechanism for PlugAuth using any
 database supported by DBI as a backend.  It is configured as above, with
